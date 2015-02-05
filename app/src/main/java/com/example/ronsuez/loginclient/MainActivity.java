@@ -15,6 +15,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ronsuez.loginclient.Model.Todo;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -36,7 +41,12 @@ public class MainActivity extends ActionBarActivity {
     private void populateListView() {
 
         //Create the list of items
-          String [] items = {"Blue", "Green"};
+        //  String [] items = {"Blue", "Green"};
+
+        List<Todo> items = new ArrayList<Todo>();
+
+        items.add(new Todo());
+
 
         //Build the adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
