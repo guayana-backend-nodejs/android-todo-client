@@ -13,13 +13,6 @@ public class Todo {
     @Expose
     private Integer id;
 
-    public Todo(String name, String createdAt, String updatedAt, Integer id) {
-        setName(name);
-        setCreatedAt(createdAt);
-        setUpdatedAt(updatedAt);
-        setId(id);
-    }
-
     /**
      *
      * @return

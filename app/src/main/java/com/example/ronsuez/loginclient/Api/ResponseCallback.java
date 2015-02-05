@@ -37,6 +37,8 @@ public class ResponseCallback implements Callback<Response> {
     public void success(Response response, retrofit.client.Response retrofitResponse) {
         Log.i(TAG, "success");
 
+        Log.i(TAG, retrofitResponse.getReason().toString());
+
         if (retrofitResponse != null) {
             Log.i(TAG, retrofitResponse.getReason());
             Log.i(TAG, retrofitResponse.toString());
@@ -47,7 +49,7 @@ public class ResponseCallback implements Callback<Response> {
 
     @Override
     public void failure(RetrofitError error) {
-        Log.e(TAG, "failure");
+        Log.e(TAG, "TODO - failure");
 
         if (error != null) {
 //            Log.e(TAG, error.getLocalizedMessage());

@@ -6,6 +6,10 @@ import com.example.ronsuez.loginclient.Api.Key;
 import com.example.ronsuez.loginclient.Api.Response;
 import com.example.ronsuez.loginclient.Api.ResponseCallback;
 import com.example.ronsuez.loginclient.Api.URL;
+import com.example.ronsuez.loginclient.Model.Todo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.Field;
@@ -47,9 +51,17 @@ public class TodoRequest extends BaseRequest {
      *
      * @param name
      */
-    public static void a(String name, RequestCallback callbacks) {
+    public static void addTodo(String name, RequestCallback callbacks) {
 
         getApiTodo().addTodo(name, new ResponseCallback(callbacks));
+
+    }
+
+
+    public static void getTodos(RequestCallback callbacks) {
+
+        getApiTodo().getTodo( new ResponseCallback(callbacks));
+
     }
 
     /* ***********************************************
@@ -74,9 +86,7 @@ public class TodoRequest extends BaseRequest {
          *
          * @param callback
          */
-        @FormUrlEncoded
         @GET(URL.TODOS)
-        public void getTodo(
-                Callback<Response> callback);
+        public void getTodo(Callback<Response> callback);
     }
 }

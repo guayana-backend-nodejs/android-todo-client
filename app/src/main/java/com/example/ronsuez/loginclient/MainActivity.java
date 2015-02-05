@@ -3,8 +3,10 @@ package com.example.ronsuez.loginclient;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,72 +17,53 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ronsuez.loginclient.Api.BaseRequest;
+import com.example.ronsuez.loginclient.Api.Status;
+import com.example.ronsuez.loginclient.Api.URL;
+import com.example.ronsuez.loginclient.Helpers.TodoListViewAdapter;
 import com.example.ronsuez.loginclient.Model.Todo;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.InjectViews;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-public class MainActivity extends ActionBarActivity {
 
+public class MainActivity extends ActionBarActivity implements BaseRequest.RequestCallback, TodoListViewAdapter.OnClick {
 
+    private static final String TAG = "todos_response";
 
-    //--> Array of Todos --> ArrayAdapter --> ListView
+    @InjectView(R.id.todoListView)
+    ListView mTodosListView;
 
-    // ListView {views: da_items.xml}
+    TodoListViewAdapter mTodoAdapter;
+
+    ArrayList<Todo> mTodoList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.inject(this);
+        mTodoList = new ArrayList<>();
         populateListView();
-        setOnClickItemListener();
+
     }
 
     private void populateListView() {
-
-        //Create the list of items
-        //  String [] items = {"Blue", "Green"};
-
-        List<Todo> items = new ArrayList<Todo>();
-
-
-//
-////        //Build the adapter
-////        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-////                this, //Context
-////                R.layout.the_item, //Layout
-////                items //Data to be desplayed
-////        );
-//
-//        //Configure the ListView
-//
-//        ListView list = (ListView) findViewById(R.id.todoListView);
-//        list.setAdapter(adapter);
-
+        TodoRequest.getTodos(this);
     }
-
-
-    private void setOnClickItemListener() {
-
-            ListView list = (ListView) findViewById(R.id.todoListView);
-
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                // TODO: CHANGE THE [[ to a less than, ]] to greater than.
-                public void onItemClick(AdapterView<?> parent, View viewClicked, int position, long id) {
-
-                    TextView textView = (TextView) viewClicked;
-
-                    String message = "You clicked # " + position +
-                            ", which is string: " + textView.getText().toString();
-
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
 
 
 
@@ -106,5 +89,77 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSuccess(com.example.ronsuez.loginclient.Api.Response response) {
+        Log.i("todos response", response.getResponse().toString());
+
+        Log.i("Response:", response.getStatus().toString());
+
+        Log.d(TAG, "USER_MESSAGES_SUCCESS");
+
+        Gson gson = new Gson();
+
+        String json = gson.toJson(response.getResponse());
+
+
+        Type listType = new TypeToken<List<Todo>>(){}.getType();
+
+
+        mTodoList = new ArrayList<Todo>((List<Todo>) gson.fromJson(json, listType));
+
+        Log.d(TAG +  " SIZE -->", mTodoList.size()+ "");
+
+        setAdapter(mTodoList);
+
+//        switch (response.getStatus()){
+//
+//            case 200:
+//                Log.d(TAG, "USER_MESSAGES_SUCCESS");
+//                Gson gson = new Gson();
+//                String json = gson.toJson(response.getResponse());
+//
+//                Todo todos[] = gson.fromJson(json, Todo[].class);
+//                Log.d(TAG, new ArrayList<Todo>(Arrays.asList(todos).size())+"");
+//
+//                setAdapter(new ArrayList<Todo>(Arrays.asList(todos)));
+//
+//                break;
+//
+//            default:
+//                Log.i("Default Case", response.getStatus().toString());
+//        }
+    }
+
+    private void setAdapter(ArrayList<Todo> todos) {
+
+        try{
+            if (mTodoAdapter==null)
+                mTodoAdapter = new TodoListViewAdapter(todos, this, this);
+            else
+                mTodoAdapter.addItems(new ArrayList<Todo>(todos));
+
+            mTodoList = new ArrayList<Todo>(todos);
+            mTodosListView.setAdapter(mTodoAdapter);
+
+        } catch (Exception e){
+            Log.e(TAG,"Error",e);
+        }
+
+    }
+
+    @Override
+    public void onError(RetrofitError error) {
+        Log.e("todos response", error.toString());
+    }
+
+    @Override
+    public void onClick(int position) {
+
+        String message = "You clicked # " + position +
+                ", which is string: " + mTodoList.get(position).getName();
+
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
 }
