@@ -45,20 +45,19 @@ public class MainActivity extends ActionBarActivity {
 
         List<Todo> items = new ArrayList<Todo>();
 
-        items.add(new Todo());
 
-
-        //Build the adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                this, //Context
-                R.layout.the_item, //Layout
-                items //Data to be desplayed
-        );
-
-        //Configure the ListView
-
-        ListView list = (ListView) findViewById(R.id.todoListView);
-        list.setAdapter(adapter);
+//
+////        //Build the adapter
+////        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+////                this, //Context
+////                R.layout.the_item, //Layout
+////                items //Data to be desplayed
+////        );
+//
+//        //Configure the ListView
+//
+//        ListView list = (ListView) findViewById(R.id.todoListView);
+//        list.setAdapter(adapter);
 
     }
 

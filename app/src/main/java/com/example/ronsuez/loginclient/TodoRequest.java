@@ -10,6 +10,7 @@ import com.example.ronsuez.loginclient.Api.URL;
 import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
 
 /**
@@ -67,6 +68,15 @@ public class TodoRequest extends BaseRequest {
         @POST(URL.ADD_TODO)
         public void addTodo(
                 @Field(Key.TODO_NAME) String name,
+                Callback<Response> callback);
+
+        /**
+         *
+         * @param callback
+         */
+        @FormUrlEncoded
+        @GET(URL.TODOS)
+        public void getTodo(
                 Callback<Response> callback);
     }
 }
