@@ -97,39 +97,30 @@ public class MainActivity extends ActionBarActivity implements BaseRequest.Reque
 
         Log.i("Response:", response.getStatus().toString());
 
-        Log.d(TAG, "USER_MESSAGES_SUCCESS");
-
-        Gson gson = new Gson();
-
-        String json = gson.toJson(response.getResponse());
 
 
-        Type listType = new TypeToken<List<Todo>>(){}.getType();
+
+        switch (response.getStatus()){
+
+           case 200:
+               Gson gson = new Gson();
+
+               String json = gson.toJson(response.getResponse());
 
 
-        mTodoList = new ArrayList<Todo>((List<Todo>) gson.fromJson(json, listType));
+               Type listType = new TypeToken<List<Todo>>(){}.getType();
 
-        Log.d(TAG +  " SIZE -->", mTodoList.size()+ "");
 
-        setAdapter(mTodoList);
+               mTodoList = new ArrayList<Todo>((List<Todo>) gson.fromJson(json, listType));
 
-//        switch (response.getStatus()){
-//
-//            case 200:
-//                Log.d(TAG, "USER_MESSAGES_SUCCESS");
-//                Gson gson = new Gson();
-//                String json = gson.toJson(response.getResponse());
-//
-//                Todo todos[] = gson.fromJson(json, Todo[].class);
-//                Log.d(TAG, new ArrayList<Todo>(Arrays.asList(todos).size())+"");
-//
-//                setAdapter(new ArrayList<Todo>(Arrays.asList(todos)));
-//
-//                break;
-//
-//            default:
-//                Log.i("Default Case", response.getStatus().toString());
-//        }
+               Log.d(TAG +  " SIZE -->", mTodoList.size()+ "");
+
+               setAdapter(mTodoList);
+                break;
+
+          default:
+              Log.i("Default Case", response.getStatus().toString());
+       }
     }
 
     private void setAdapter(ArrayList<Todo> todos) {
